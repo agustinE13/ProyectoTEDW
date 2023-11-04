@@ -10,5 +10,15 @@ router.get('/productoCategoria/:categoria_id', ControladorProducto.productosCate
 
 //buscar el producto por nombre
 router.get('/producto_Marca/:nombre_marca', ControladorProducto.productoMarca)
+//buscar el producto por id
+router.get('/productoId/:id',ControladorProducto.productoId)
+//guardar producto
+router.post('/productoNuevo',ControladorProducto.productoNuevo)
+
+//eliminar producto
+router.delete('/eliminarProducto/:id',ControladorProducto.eliminarProducto)
+//actualizar un producto
+router.patch('/actualizarProducto/:id',ControladorProducto.actualizarProducto)
+
 
 module.exports = router

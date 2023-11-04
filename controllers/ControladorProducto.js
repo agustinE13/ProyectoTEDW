@@ -22,6 +22,7 @@ const categorias = async (req, res) => {
         console.log(error)
     }
 }
+//mostrar los productos segun su categoria
 const productosCategoria = async (req,res) =>{
     try{
         const productos_categoria = await Producto
@@ -33,6 +34,23 @@ const productosCategoria = async (req,res) =>{
         console.log(error)
     }
 }
+//mostrar producto por id
+const productoId = async (req, res) => {
+    try {
+        const result = await Producto.findOne({ id_producto: req.params.id });
+
+        if (result) {
+            res.json({ success: true, product: result });
+        } else {
+            res.status(404).json({ success: false, message: 'El producto no se encontró' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
+    }
+}
+
+//mostrar los productos segun la marca
 const productoMarca = async (req, res) => {
     try {
         // Convertir el nombre de la marca a minúsculas para una búsqueda insensible a mayúsculas/minúsculas
@@ -52,8 +70,53 @@ const productoMarca = async (req, res) => {
     }
 }
 
+//registrar un nuevo producto
+const productoNuevo = async (req, res) => {
+    try {
+        let Newproduct = req.body
 
+        const p = await Producto.find().sort({"id_producto":-1}).limit(1)
+        Newproduct.id_producto = parseInt(p[0].id_producto) + 1
 
+        Newproduct.categoria = new mongoose.Types.ObjectId(req.body.categoria)
+        Newproduct.proveedor = new mongoose.Types.ObjectId(req.body.proveedor)
+        Newproduct.marca = new mongoose.Types.ObjectId(req.body.marca)
+        const product = new Producto(Newproduct)
+        let savedProduct = await product.save()
+        res.send(savedProduct)
+       
+    } catch (error) {
+        //console.log(error.errors)
+        res.status(400).send(error.errors)
+    }
+}
 
+const actualizarProducto = async (req, res) => {
+    Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
+      .then(product => {
+        if (product) {
+          return res.status(200).json({ success: true, message: 'Producto actualizado', product });
+        } else {
+          return res.status(404).json({ success: false, message: 'El producto no se actualizó correctamente' });
+        }
+      })
+      .catch(err => {
+        return res.status(500).json({ success: false, error: err });
+      });
+  }
+  
 
-module.exports = {listarproductos,categorias,productosCategoria,productoMarca}
+const eliminarProducto = async(req,res)=>{
+    //const result = await Producto.findOneAndDelete( { "id_producto":parseInt(req.params.id) });
+        Producto.findByIdAndRemove(req.params.id).then(product =>{
+            if(product){
+                return res.status(200).json({success: true, message: 'producto eliminado'})
+            }else{
+                return res.status(404).json({success: false, message: 'el producto no exite'})
+            }
+        }).catch(err=>{
+            return res.status(500).json({success: false, error: err}) 
+        })
+}
+
+module.exports = {listarproductos,categorias,productosCategoria,productoMarca,productoNuevo,eliminarProducto,actualizarProducto,productoId}
