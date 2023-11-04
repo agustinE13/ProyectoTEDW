@@ -8,7 +8,7 @@ const ProductoSchema = new mongoose.Schema({
     nombre: String,
     precio: Number,
     descripcion: String,
-    color: String,
+    color: [String],
     material: String,
     imagen : [String],
     atributos: {
@@ -16,8 +16,8 @@ const ProductoSchema = new mongoose.Schema({
         estilo: String
      },
      ficha_tecnica: {
-        voltaje: Number,
-        potencia: Number,
+        voltaje: String,
+        potencia: String,
         dimensiones: String,
         peso: String,
         
