@@ -4,7 +4,7 @@ const Categoria = require('../models/Categoria')
 const Marca = require('../models/Marca')
 
 //mostrar todos los productos
-const listarproductos = async (req, res) => {
+const productList = async (req, res) => {
     try{
         const products = await Producto.find().populate('categoria').populate('proveedor').populate('marca')
         res.send(products)
@@ -14,7 +14,7 @@ const listarproductos = async (req, res) => {
 }
 
 //mostrar todas las categorias
-const categorias = async (req, res) => {
+const categories = async (req, res) => {
     try{
         const catego = await Categoria.find()
         res.send(catego)
@@ -23,7 +23,7 @@ const categorias = async (req, res) => {
     }
 }
 //mostrar los productos segun su categoria
-const productosCategoria = async (req,res) =>{
+const ProductCategory = async (req,res) =>{
     try{
         const productos_categoria = await Producto
                                     .find({categoria:new mongoose.Types.ObjectId(req.params.categoria_id)})
@@ -35,7 +35,7 @@ const productosCategoria = async (req,res) =>{
     }
 }
 //mostrar producto por id
-const productoId = async (req, res) => {
+const productId = async (req, res) => {
     try {
         const result = await Producto.findOne({ id_producto: req.params.id });
 
@@ -51,7 +51,7 @@ const productoId = async (req, res) => {
 }
 
 //mostrar los productos segun la marca
-const productoMarca = async (req, res) => {
+const BrandProduct = async (req, res) => {
     try {
         // Convertir el nombre de la marca a minúsculas para una búsqueda insensible a mayúsculas/minúsculas
         const nombreMarca = req.params.nombre_marca.toUpperCase();
@@ -71,7 +71,7 @@ const productoMarca = async (req, res) => {
 }
 
 //registrar un nuevo producto
-const productoNuevo = async (req, res) => {
+const NewProduct = async (req, res) => {
     try {
         let Newproduct = req.body
 
@@ -91,7 +91,7 @@ const productoNuevo = async (req, res) => {
     }
 }
 
-const actualizarProducto = async (req, res) => {
+const UpdateProduct = async (req, res) => {
     Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
       .then(product => {
         if (product) {
@@ -106,7 +106,7 @@ const actualizarProducto = async (req, res) => {
   }
   
 
-const eliminarProducto = async(req,res)=>{
+const DeleteProduct = async(req,res)=>{
     //const result = await Producto.findOneAndDelete( { "id_producto":parseInt(req.params.id) });
         Producto.findByIdAndRemove(req.params.id).then(product =>{
             if(product){
@@ -119,4 +119,4 @@ const eliminarProducto = async(req,res)=>{
         })
 }
 
-module.exports = {listarproductos,categorias,productosCategoria,productoMarca,productoNuevo,eliminarProducto,actualizarProducto,productoId}
+module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId}
