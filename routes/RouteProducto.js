@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const ControladorProducto = require('../controllers/ControladorProducto')
+const ControladorProducto = require('../controllers/ProductController')
 
 
 router.get('/producto', ControladorProducto.productList)
