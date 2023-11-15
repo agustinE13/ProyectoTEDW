@@ -1,23 +1,28 @@
 const mongoose = require('mongoose')
 const {Usuario} = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
+const cookieParser = require('cookie-parser') 
 const jwt = require('jsonwebtoken');
 
 const nuevoUsuario = async(req,res)=>{
+    const user = await Usuario.findOne({email: req.body.email})
     let usuario = new Usuario({
-        nombre: req.body.nombre,
-        apellidoP: req.body.apellidoP,
-        apellidoM: req.body.apellidoM,
+        name: req.body.name,
+        lastname: req.body.lastname,
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password,10),
-        telefono: req.body.telefono,
+        phone: req.body.phone,
         isAdmin: req.body.isAdmin,
-        calle: req.body.calle,
-        apartment: req.body.apartment,
-        codigo_postal: req.body.codigo_postal,
-        ciudad: req.body.ciudad,
+        street: req.body.street,
+        zip: req.body.zip,
+        city: req.body.city,
+        state: req.body.state,
     })
+    if(user){
+        return res.status(400).send("email already exist")
+    }
     usuario = await usuario.save();
+    
     if(!usuario)
     return res.status(400).send('The user cannot be created!')
 
@@ -32,21 +37,25 @@ const login = async (req,res) => {
     }
 
     if(user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
-        const token = jwt.sign(
-            {
-                userId: user.id,
-                isAdmin: user.isAdmin,
-            },
-            secret,
-            {expiresIn: '1d'}
-        )
+        const payload = {
+            _id: user.id,
+            email: user.email,
+            isAdmin: user.isAdmin
+        }
+        const token = jwt.sign(payload, secret,{expiresIn: '1d'})
+
+        res.cookie("jwt", token)       
        
-        res.status(200).send({user: user.email , token: token}) 
+        res.status(200).json({success:true, data: payload, message: "success login"})
     } else {
        res.status(400).json({success: false, message: 'Wrong Password'})
     }
 
     
+}
+const profile = async(req,res)=>{
+    
+
 }
 
 function isLoggedIn (req, res, next) {

@@ -1,15 +1,11 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-    nombre: {
+    name: {
         type: String,
         required: true,
     },
-    apellidoP: {
-        type: String,
-        required: true,
-    },
-    apellidoM: {
+    lastname: {
         type: String,
         required: true,
     },
@@ -21,7 +17,7 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    telefono: {
+    phone: {
         type: String,
         required: true,
     },
@@ -29,22 +25,24 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
-    calle: {
+    street: {
         type: String,
         default: ''
     },
-    estado: {
+    
+    zip :{
         type: String,
         default: ''
     },
-    codigo_postal :{
+    city: {
         type: String,
         default: ''
     },
-    ciudad: {
+    state: {
         type: String,
         default: ''
     }
+
 },{collection:'Usuario'});
 
 
