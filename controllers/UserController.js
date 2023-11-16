@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
-const {Usuario} = require('../models/Usuario');
+const {Usuario} = require('../models/user');
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser') 
 const jwt = require('jsonwebtoken');
+const { tokenSign } = require('../libs/token')
 
 const nuevoUsuario = async(req,res)=>{
     const user = await Usuario.findOne({email: req.body.email})
@@ -12,7 +13,6 @@ const nuevoUsuario = async(req,res)=>{
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password,10),
         phone: req.body.phone,
-        isAdmin: req.body.isAdmin,
         street: req.body.street,
         zip: req.body.zip,
         city: req.body.city,
@@ -40,7 +40,7 @@ const login = async (req,res) => {
         const payload = {
             _id: user.id,
             email: user.email,
-            isAdmin: user.isAdmin
+            role: user.role
         }
         const token = jwt.sign(payload, secret,{expiresIn: '1d'})
 
@@ -66,4 +66,3 @@ function isLoggedIn (req, res, next) {
 }
 
 module.exports = {nuevoUsuario,login}
-

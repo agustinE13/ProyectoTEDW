@@ -21,10 +21,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    isAdmin: {
-        type: Boolean,
-        default: false,
-    },
     street: {
         type: String,
         default: ''
@@ -41,8 +37,15 @@ const userSchema = new mongoose.Schema({
     state: {
         type: String,
         default: ''
+    },
+    role: {
+        type: String,
+        default: "customer",
+        enum: [
+            "customer",
+            "admin"
+        ]
     }
-
 },{collection:'Usuario'});
 
 
