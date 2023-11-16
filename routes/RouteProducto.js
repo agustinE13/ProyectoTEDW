@@ -20,9 +20,9 @@ router.get('/productsId/:id',ControladorProducto.productId)
 router.post('/Newproduct',checkAuth,checkRoleAuth(['admin']), ControladorProducto.NewProduct)
 
 //eliminar producto
-router.delete('/deleteProduct/:id',ControladorProducto.DeleteProduct)
+router.delete('/deleteProduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.DeleteProduct)
 //actualizar un producto
-router.patch('/pdateproduct/:id',ControladorProducto.UpdateProduct)
+router.patch('/pdateproduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.UpdateProduct)
 
 
 module.exports = router

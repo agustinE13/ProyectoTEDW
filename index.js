@@ -22,7 +22,7 @@ app.use(cookieParser())
 app.use(passport.initialize())
 //routes
 app.use(apiprefix,producto)
-app.use('/tienda/v1/users', usuario)
+app.use(apiprefix, usuario)
 
 
 
