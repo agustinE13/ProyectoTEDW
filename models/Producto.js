@@ -4,25 +4,14 @@ const Proveedor = require ('./Proveedor');
 const Marca = require ('./Marca');
 
 const ProductoSchema = new mongoose.Schema({
-    id_producto: Number,
     nombre: String,
     precio: Number,
     descripcion: String,
     color: [String],
     material: String,
     imagen : [String],
-    atributos: {
-        talla: [String],
-        estilo: String
-     },
-     ficha_tecnica: {
-        voltaje: String,
-        potencia: String,
-        dimensiones: String,
-        peso: String,
-        
-     },
-     inventario: {
+    atributos: [String],
+    inventario: {
         cantidad: Number,
         stock : Boolean
      },

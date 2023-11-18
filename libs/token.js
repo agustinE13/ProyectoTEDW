@@ -7,9 +7,9 @@ const tokenSign = async (user) => { // Genera Token
             email: user.email,
             role: user.role
         },
-        process.env.JWT_SECRET, 
+        process.env.SECRET, 
         {
-            expiresIn: "2h", //TODO tiempo de vida
+            expiresIn: "2h", // tiempo de vida
         }
     );
 }
