@@ -1,12 +1,12 @@
 const mongoose = require('mongoose')
-const Producto = require('../models/Producto')
-const Categoria = require('../models/Categoria')
-const Marca = require('../models/Marca')
+const Product = require('../models/Product')
+const Categoria = require('../models/Category')
+const Marca = require('../models/Brand')
 
 //mostrar todos los productos
 const productList = async (req, res) => {
     try{
-        const products = await Producto.find().populate('categoria').populate('proveedor').populate('marca')
+        const products = await Product.find().populate('category').populate('supplier').populate('brand')
         res.send(products)
     }catch(error){
         console.log(error)
@@ -25,7 +25,7 @@ const categories = async (req, res) => {
 //mostrar los productos segun su categoria
 const ProductCategory = async (req,res) =>{
     try{
-        const productos_categoria = await Producto
+        const productos_categoria = await Product
                                     .find({categoria:new mongoose.Types.ObjectId(req.params.categoria_id)})
                                     .populate('categoria', 'categoria')
                                     .populate('proveedor')
@@ -37,7 +37,7 @@ const ProductCategory = async (req,res) =>{
 //mostrar producto por id
 const productId = async (req, res) => {
     try {
-        const result = await Producto.findOne({ id_producto: req.params.id });
+        const result = await Product.findOne({ id_producto: req.params.id });
 
         if (result) {
             res.json({ success: true, product: result });
@@ -75,13 +75,13 @@ const NewProduct = async (req, res) => {
     try {
         let Newproduct = req.body
 
-        const p = await Producto.find().sort({"id_producto":-1}).limit(1)
+        const p = await Product.find().sort({"id_producto":-1}).limit(1)
         Newproduct.id_producto = parseInt(p[0].id_producto) + 1
 
         Newproduct.categoria = new mongoose.Types.ObjectId(req.body.categoria)
         Newproduct.proveedor = new mongoose.Types.ObjectId(req.body.proveedor)
         Newproduct.marca = new mongoose.Types.ObjectId(req.body.marca)
-        const product = new Producto(Newproduct)
+        const product = new Product(Newproduct)
         let savedProduct = await product.save()
         res.send(savedProduct)
        
@@ -92,7 +92,7 @@ const NewProduct = async (req, res) => {
 }
 
 const UpdateProduct = async (req, res) => {
-    Producto.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
+    Product.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
       .then(product => {
         if (product) {
           return res.status(200).json({ success: true, message: 'Producto actualizado', product });
@@ -108,7 +108,7 @@ const UpdateProduct = async (req, res) => {
 
 const DeleteProduct = async(req,res)=>{
     //const result = await Producto.findOneAndDelete( { "id_producto":parseInt(req.params.id) });
-        Producto.findByIdAndRemove(req.params.id).then(product =>{
+        Product.findByIdAndRemove(req.params.id).then(product =>{
             if(product){
                 return res.status(200).json({success: true, message: 'producto eliminado'})
             }else{
