@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const ProveedorSchema = new mongoose.Schema({
-    id_proveedor : Number,
-    proveedor: String
+const SupplierSchema = new mongoose.Schema({
+    id_supplier : Number,
+    supplier: String
 },
-{collection:'Proveedor'});
-const Proveedor = mongoose.model('Proveedor', ProveedorSchema);
-module.exports=Proveedor
+{collection:'Supplier'});
+const Supplier = mongoose.model('Supplier', SupplierSchema);
+module.exports=Supplier

@@ -46,9 +46,9 @@ const userSchema = new mongoose.Schema({
             "admin"
         ]
     }
-},{collection:'Usuario'});
+},{collection:'Users'});
 
 
 
-exports.Usuario = mongoose.model('Usuario', userSchema);
+exports.Users = mongoose.model('Users', userSchema);
 exports.userSchema = userSchema;
