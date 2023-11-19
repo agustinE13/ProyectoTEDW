@@ -11,7 +11,7 @@ const checkRoleAuth = (roles) => async (req, res, next) => {
         const token = req.cookies.jwt
         //validar el token
         const tokenData = await verifyToken(token)
-        const userData = await userModel.Usuario.findById(tokenData._id)
+        const userData = await userModel.Users.findById(tokenData._id)
         //console.log(userData)
         //verificar el rol
         if ([].concat(roles).includes(userData.role)) { //TODO:

@@ -18,11 +18,12 @@ router.get('/productsBrand/:nombre_marca', ControladorProducto.BrandProduct)
 router.get('/productsId/:id',ControladorProducto.productId)
 //guardar producto
 router.post('/Newproduct',checkAuth,checkRoleAuth(['admin']), ControladorProducto.NewProduct)
+router.get('/search/:item',ControladorProducto.search)
 
 //eliminar producto
 router.delete('/deleteProduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.DeleteProduct)
 //actualizar un producto
-router.patch('/pdateproduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.UpdateProduct)
+router.patch('/updateProduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.UpdateProduct)
 
 
 module.exports = router

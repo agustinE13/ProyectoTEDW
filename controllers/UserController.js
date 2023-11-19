@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const {Usuario} = require('../models/user');
+const {Users} = require('../models/user');
+const History = require('../models/History')
 const bcrypt = require('bcryptjs');
 const cookieParser = require('cookie-parser') 
 const jwt = require('jsonwebtoken');
@@ -7,8 +8,8 @@ const { tokenSign } = require('../libs/token')
 const sendemail = require('../middleware/sendEmail')
 
 const newUser = async(req,res)=>{
-    const user = await Usuario.findOne({email: req.body.email})
-    let usuario = new Usuario({
+    const user = await Users.findOne({email: req.body.email})
+    let usuario = new Users({
         name: req.body.name,
         lastname: req.body.lastname,
         email: req.body.email,
@@ -31,7 +32,9 @@ const newUser = async(req,res)=>{
 }
 
 const login = async (req,res) => {
-    const user = await Usuario.findOne({email: req.body.email})
+  
+    try {
+      const user = await Users.findOne({email: req.body.email})
     const secret = process.env.SECRET;
     if(!user) {
         return res.status(400).json({success: false, message: 'Username does not exist'})
@@ -53,6 +56,10 @@ const login = async (req,res) => {
        res.status(400).json({success: false, message: 'Wrong Password'})
     }
 
+    } catch (error) {
+      res.status(500).json({success: false, message:"Internal server error"})
+      
+    }
     
 }
 
@@ -68,7 +75,7 @@ const profile = async(req,res)=>{
     return res.status(500).json({ success: false, error: err });
   })*/
     try{ 
-        const user = await Usuario.findOne({id:req.params._id}).select("-role -__v")
+        const user = await Users.findOne({id:req.params._id}).select("-role -__v")
         if (user) {
             res.json({ success: true, data: user });
         } else {
@@ -81,7 +88,7 @@ const profile = async(req,res)=>{
 }
 const editprofile = async(req,res)=>{
 
-    Usuario.findOneAndUpdate({ id: req.params._id }, { $set: req.body }, { new: true })
+    Users.findOneAndUpdate({ id: req.params._id }, { $set: req.body }, { new: true })
       .then(user => {
         if (user) {
           return res.status(200).json({ success: true, message: 'Updated profile!' });
@@ -96,7 +103,7 @@ const editprofile = async(req,res)=>{
 
 const allUsers = async(req,res)=>{
     try {
-        const users = await Usuario.find().select('-__v -role -passwordHash')
+        const users = await Users.find().select('-__v -role -passwordHash')
         res.status(200).send(users)        
     } catch (error) {
         res.status(500).json({ success: false, message: 'server internal error' });
@@ -165,7 +172,17 @@ const resetPassword = async(req,res)=> {
   });
 }
 const history = async(req,res)=>{
-    
+  History.find({ usuarioId: usuarioId })
+  .populate('productos') // Si quieres obtener detalles completos de los productos
+  .sort('-fechaCompra')  // Ordenar por fecha de compra descendente
+  .exec((err, historial) => {
+    if (err) {
+      console.error('Error al recuperar el historial de compras:', err);
+      res.status(500).json({ error: 'Error al recuperar el historial de compras.' });
+    } else {
+      res.json({ historialCompras: historial });
+    }
+  });
 }
 
 

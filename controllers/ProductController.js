@@ -26,9 +26,9 @@ const categories = async (req, res) => {
 const ProductCategory = async (req,res) =>{
     try{
         const productos_categoria = await Product
-                                    .find({categoria:new mongoose.Types.ObjectId(req.params.categoria_id)})
-                                    .populate('categoria', 'categoria')
-                                    .populate('proveedor')
+                                    .find({category:new mongoose.Types.ObjectId(req.params.categoria_id)})
+                                    .populate('category ', 'category')
+                                    .populate('supplier')
         res.send(productos_categoria)                            
     }catch(error){
         console.log(error)
@@ -54,15 +54,15 @@ const productId = async (req, res) => {
 const BrandProduct = async (req, res) => {
     try {
         // Convertir el nombre de la marca a minúsculas para una búsqueda insensible a mayúsculas/minúsculas
-        const nombreMarca = req.params.nombre_marca.toUpperCase();
+        const nombreMarca = req.params.nombre_marca.toLowerCase();
 
         // Buscar la marca por nombre y esperar el resultado
-        const marca = await Marca.findOne({ marca: new RegExp('^' + nombreMarca, 'i') });
+        const marca = await Marca.findOne({ brand: new RegExp('^' + nombreMarca, 'i') });
         if (!marca) {
             return res.status(404).send('No hay publicaciones que coincidan con tu búsqueda');
         }
         // Usar el ObjectId de la marca para buscar los productos y esperar el resultado
-        const productos = await Producto.find({ marca: marca._id });
+        const productos = await Product.find({ brand: marca._id });
         res.send(productos);
     } catch (error) {
         console.log(error);
@@ -75,19 +75,16 @@ const NewProduct = async (req, res) => {
     try {
         let Newproduct = req.body
 
-        const p = await Product.find().sort({"id_producto":-1}).limit(1)
-        Newproduct.id_producto = parseInt(p[0].id_producto) + 1
-
         Newproduct.categoria = new mongoose.Types.ObjectId(req.body.categoria)
         Newproduct.proveedor = new mongoose.Types.ObjectId(req.body.proveedor)
         Newproduct.marca = new mongoose.Types.ObjectId(req.body.marca)
         const product = new Product(Newproduct)
         let savedProduct = await product.save()
-        res.send(savedProduct)
+        res.status(200).json({status: true, message: "correctly registered product"})
        
     } catch (error) {
         //console.log(error.errors)
-        res.status(400).send(error.errors)
+        res.status(400).json({status: false, message:"error when adding product"})
     }
 }
 
@@ -95,7 +92,7 @@ const UpdateProduct = async (req, res) => {
     Product.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
       .then(product => {
         if (product) {
-          return res.status(200).json({ success: true, message: 'Producto actualizado', product });
+          return res.status(200).json({ success: true, message: 'Updated product' });
         } else {
           return res.status(404).json({ success: false, message: 'El producto no se actualizó correctamente' });
         }
@@ -118,5 +115,24 @@ const DeleteProduct = async(req,res)=>{
             return res.status(500).json({success: false, error: err}) 
         })
 }
+const search = async (req, res) => {
+    const { item } = req.params;
+    
+    try {
+      //const brand = await Marca.findOne({ brand: new RegExp('^' + item, 'i') });
+      const product = await Product.find({
+        $or: [
+          { name: new RegExp('^' + item, 'i') },
+          //{ brand: brand._id },
+        ],
+      });
+  
+      res.json(product);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error interno del servidor' });
+    }
+  };
+  
 
-module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId}
+module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId,search}

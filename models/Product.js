@@ -4,9 +4,15 @@ const Supplier = require ('./Supplier');
 const Brand = require ('./Brand');
 
 const ProductSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type:String,
+        require:true
+    },
     price: Number,
-    descripcition: String,
+    description: {
+        type:String,
+        require:true
+    },
     color: [String],
     material: String,
     images : [String],
@@ -15,11 +21,20 @@ const ProductSchema = new mongoose.Schema({
         quantity: Number,
         stock : Boolean
      },
-     offers: {        
-           type: String,
-           value: Number,
-           description: String        
-     },
+     offers: {
+        type : {
+            type: String,
+            default: ' '
+        },
+        value : {
+            type: Number,
+            default: 0
+        },
+        description : {
+            type: String,
+            default: ' '
+        }
+    },
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
