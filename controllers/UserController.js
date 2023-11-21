@@ -15,10 +15,6 @@ const newUser = async(req,res)=>{
         email: req.body.email,
         passwordHash: bcrypt.hashSync(req.body.password,10),
         phone: req.body.phone,
-        street: req.body.street,
-        zip: req.body.zip,
-        city: req.body.city,
-        state: req.body.state,
     })
     if(user){
         return res.status(400).send("email already exist")
@@ -49,7 +45,7 @@ const login = async (req,res) => {
         const token = await tokenSign(user)
         //const token = jwt.sign(payload, secret,{expiresIn: '1d'})
 
-        res.cookie("jwt", token)       
+        res.cookie("jwt", token, { httpOnly: true })     
        
         res.status(200).json({success:true, message: "success login"})
     } else {
@@ -185,8 +181,13 @@ const history = async(req,res)=>{
   });
 }
 
+const logout = (req,res)=>{
+  
+  res.cookie('jwt', '', {
+    expires: new Date(0) 
+  });
 
+  res.status(200).json({ success:true });
+}
 
-
-
-module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword}
+module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword,logout}

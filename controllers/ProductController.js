@@ -27,7 +27,7 @@ const ProductCategory = async (req,res) =>{
     try{
         const productos_categoria = await Product
                                     .find({category:new mongoose.Types.ObjectId(req.params.categoria_id)})
-                                    .populate('category ', 'category')
+                                    .populate('category', 'category')
                                     .populate('supplier')
         res.send(productos_categoria)                            
     }catch(error){

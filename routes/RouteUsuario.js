@@ -12,6 +12,7 @@ router.post('/users/login',ControladorUsuario.login)
 router.post('/forgot-password',ControladorUsuario.forgotpassword)
 router.post('/reset-password/:token',ControladorUsuario.resetPassword)
 router.put('/users/editprofile/:id',checkOrigin,ControladorUsuario.editprofile)
+router.post('/users/logout',checkOrigin,ControladorUsuario.logout)
 
 module.exports = router
 
