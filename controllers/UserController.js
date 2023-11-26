@@ -27,37 +27,27 @@ const newUser = async(req,res)=>{
     res.send(usuario);
 }
 
-const login = async (req,res) => {
-  
-    try {
-      const user = await Users.findOne({email: req.body.email})
+const login = async (req, res) => {
+  try {
+    const user = await Users.findOne({ email: req.body.email });
     const secret = process.env.SECRET;
-    if(!user) {
-        return res.status(400).json({success: false, message: 'Username does not exist'})
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Username does not exist' });
     }
 
-    if(user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
-        /*const payload = {
-            _id: user.id,
-            email: user.email,
-            role: user.role
-        }*/
-        const token = await tokenSign(user)
-        //const token = jwt.sign(payload, secret,{expiresIn: '1d'})
-
-        res.cookie("jwt", token, { httpOnly: true })     
-       
-        res.status(200).json({success:true, message: "success login"})
+    if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
+      const token = await tokenSign(user);
+      res.cookie("jwt", token);
+      res.status(200).json({ success: true, message: "success login" });
     } else {
-       res.status(400).json({success: false, message: 'Wrong Password'})
+      res.status(400).json({ success: false, message: 'Wrong Password' });
     }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
 
-    } catch (error) {
-      res.status(500).json({success: false, message:"Internal server error"})
-      
-    }
-    
-}
 
 const profile = async(req,res)=>{
    /*Usuario.findOne({id: req.params._id}).select("-role").select("-__v").then(user=>{
