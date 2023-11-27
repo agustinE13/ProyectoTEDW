@@ -62,7 +62,7 @@ const supplierId = async (req,res)=>{
         if (result) {
             res.send(result);
         } else {
-            res.status(404).json({ success: false, message: 'The product was not found' });
+            res.status(404).json({ success: false, message: 'Supplier was not found' });
         }
     } catch (error) {
         console.log(error);

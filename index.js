@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser')
 const producto = require('./routes/RouteProducto')
 const usuario = require('./routes/RouteUsuario');
 const supplier = require('./routes/RouteSupplier')
+const brand = require('./routes/RouteBrand')
 const passport = require('passport');
 const apiprefix = process.env.API_PREFIX
 const port = process.env.PORT
@@ -26,6 +27,7 @@ app.use(passport.initialize())
 app.use(apiprefix,producto)
 app.use(apiprefix, usuario)
 app.use(apiprefix,supplier)
+app.use(apiprefix,brand)
 
 
 
