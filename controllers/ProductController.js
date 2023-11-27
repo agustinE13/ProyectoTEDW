@@ -37,12 +37,27 @@ const ProductCategory = async (req,res) =>{
 //mostrar producto por id
 const productId = async (req, res) => {
     try {
-        const result = await Product.findOne({ id_producto: req.params.id });
+        const result = await Product.findOne({ _id: req.params.id });
 
         if (result) {
             res.json({ success: true, product: result });
         } else {
             res.status(404).json({ success: false, message: 'El producto no se encontró' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
+    }
+}
+//mostrar categoria por id
+const categoryId = async (req, res) => {
+    try {
+        const result = await Categoria.findOne({ _id: req.params.id });
+        if (result) {
+            res.json({ success: true, category: result });
+        }
+        else {
+            res.status(404).json({ success: false, message: 'La categoria no se encontró' });
         }
     } catch (error) {
         console.log(error);
@@ -135,4 +150,4 @@ const search = async (req, res) => {
   };
   
 
-module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId,search}
+module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId,search,categoryId}
