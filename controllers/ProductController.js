@@ -37,7 +37,7 @@ const ProductCategory = async (req,res) =>{
 //mostrar producto por id
 const productId = async (req, res) => {
     try {
-        const result = await Product.findOne({ id_producto: req.params.id });
+        const result = await Product.findOne({ _id: req.params.id });
 
         if (result) {
             res.json({ success: true, product: result });

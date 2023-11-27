@@ -21,7 +21,7 @@ const newUser = async(req,res)=>{
     }
     usuario = await usuario.save();
     
-    if(!usuario)
+    if(!usuario)  
     return res.status(400).send('The user cannot be created!')
 
     res.send(usuario);
@@ -35,7 +35,6 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({ success: false, message: 'Username does not exist' });
     }
-
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
       const token = await tokenSign(user);
       res.cookie("jwt", token);
@@ -61,7 +60,7 @@ const profile = async(req,res)=>{
     return res.status(500).json({ success: false, error: err });
   })*/
     try{ 
-        const user = await Users.findOne({id:req.params._id}).select("-role -__v")
+        const user = await Users.findOne({_id:req.params.id}).select("-role -__v")
         if (user) {
             res.json({ success: true, data: user });
         } else {
@@ -74,7 +73,7 @@ const profile = async(req,res)=>{
 }
 const editprofile = async(req,res)=>{
 
-    Users.findOneAndUpdate({ id: req.params._id }, { $set: req.body }, { new: true })
+    Users.findOneAndUpdate({ _id: req.params.id }, { $set: req.body }, { new: true })
       .then(user => {
         if (user) {
           return res.status(200).json({ success: true, message: 'Updated profile!' });
@@ -99,10 +98,13 @@ const allUsers = async(req,res)=>{
 const forgotpassword = async(req, res) =>{
     try {
         const email = req.body.email
-        const user = await Usuario.findOne({email: req.body.email},'email')
+        const user = await Users.findOne({email: req.body.email},'email')
         if(user){
             const token = jwt.sign({email, _id:user.id},process.env.SECRET, { expiresIn: '15m' })
-            const resetLink = `http://localhost:3000${process.env.API_PREFIX}/reset-password/${token}`
+            //console.log(token.Date)
+            //const resetLink = `http://localhost:3000${process.env.API_PREFIX}/reset-password/${token}`
+            const resetLink = `http://localhost:4200/reset-password/${token}`
+
             const html = `
       <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
       <a href="${resetLink}">${resetLink}</a>
@@ -131,17 +133,22 @@ const resetPassword = async(req,res)=> {
     const  password  = req.body.password
     const  verifyPassword = req.body.verifyPassword    
 
+    
+
   jwt.verify(token, process.env.SECRET, (err, decoded) => {
     
     if (err) {
       return res.status(401).json({ error: 'Invalid or expired token.' })
     }
     if(password==verifyPassword){
+      //console.log(password)
+      //console.log(verifyPassword)
         const _id = decoded._id
         console.log(_id)
-        Usuario.findOneAndUpdate({ _id },{ $set: {passwordHash: bcrypt.hashSync(req.body.password, 10) }},{ new: true })
+        Users.findOneAndUpdate({ _id },{ $set: {passwordHash: bcrypt.hashSync(req.body.password, 10) }},{ new: true })
       .then(user => {
         if (user) {
+          //console.log(user)
           return res.status(200).json({ success: true, message: 'Updated password!' })
         } else {
           return res.status(404).json({ success: false, message: 'password was not updated correctly' })
@@ -152,7 +159,7 @@ const resetPassword = async(req,res)=> {
       });
        
     }else{
-        res.send("Passwords do not match")
+      res.status(400).json({ error: "Passwords do not match" });
     }
         
   });

@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
 const SupplierSchema = new mongoose.Schema({
-    id_supplier : Number,
-    supplier: String
+    supplier: {
+        type: String,
+        require: true
+    }
 },
 {collection:'Supplier'});
 const Supplier = mongoose.model('Supplier', SupplierSchema);

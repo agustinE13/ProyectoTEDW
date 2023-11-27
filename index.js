@@ -4,6 +4,7 @@ const mongoose = require('./libs/MongooseConnection')
 const cookieParser = require('cookie-parser') 
 const producto = require('./routes/RouteProducto')
 const usuario = require('./routes/RouteUsuario');
+const supplier = require('./routes/RouteSupplier')
 const passport = require('passport');
 const apiprefix = process.env.API_PREFIX
 const port = process.env.PORT
@@ -24,6 +25,7 @@ app.use(passport.initialize())
 //routes
 app.use(apiprefix,producto)
 app.use(apiprefix, usuario)
+app.use(apiprefix,supplier)
 
 
 
