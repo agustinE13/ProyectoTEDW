@@ -9,6 +9,7 @@ const checkOrigin = require('../middleware/origin')
 
 router.get('/products', ControladorProducto.productList)
 router.get('/categories',ControladorProducto.categories)
+router.get('/categories/:id',ControladorProducto.categoryId)
 //buscar el producto por categoria pasando como parametro el id de la categoria
 router.get('/productsCategory/:categoria_id', ControladorProducto.ProductCategory)
 

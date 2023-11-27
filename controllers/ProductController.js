@@ -49,6 +49,21 @@ const productId = async (req, res) => {
         res.status(500).json({ success: false, error: 'Error en el servidor' });
     }
 }
+//mostrar categoria por id
+const categoryId = async (req, res) => {
+    try {
+        const result = await Categoria.findOne({ _id: req.params.id });
+        if (result) {
+            res.json({ success: true, category: result });
+        }
+        else {
+            res.status(404).json({ success: false, message: 'La categoria no se encontró' });
+        }
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, error: 'Error en el servidor' });
+    }
+}
 
 //mostrar los productos segun la marca
 const BrandProduct = async (req, res) => {
@@ -135,4 +150,4 @@ const search = async (req, res) => {
   };
   
 
-module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId,search}
+module.exports = {productList,categories,ProductCategory,BrandProduct,NewProduct,DeleteProduct,UpdateProduct,productId,search,categoryId}
