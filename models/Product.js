@@ -17,11 +17,8 @@ const ProductSchema = new mongoose.Schema({
     material: String,
     images : [String],
     attributes: [String],
-    inventory: {
-        quantity: Number,
-        stock : Boolean
-     },
-     offers: {
+    quantity: Number,
+    /*offers: {
         type : {
             type: String,
             default: ' '
@@ -34,7 +31,7 @@ const ProductSchema = new mongoose.Schema({
             type: String,
             default: ' '
         }
-    },
+    }*/
     category: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Category',
@@ -49,7 +46,12 @@ const ProductSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Brand',
         require: true
-    }
+    },
+    details: [String],
+    createdAt: {
+        type: Date,
+        default: Date.now,
+      },
 },
 {collection:'Product'});
 const Product = mongoose.model('Product', ProductSchema);

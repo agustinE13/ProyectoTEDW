@@ -37,7 +37,7 @@ const login = async (req, res) => {
     }
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
       const token = await tokenSign(user);
-      res.cookie("jwt", token);
+      res.cookie("jwt", token,  { sameSite: 'None', secure: true });
       res.status(200).json({ success: true, message: "success login" });
     } else {
       res.status(400).json({ success: false, message: 'Wrong Password' });
@@ -60,7 +60,7 @@ const profile = async(req,res)=>{
     return res.status(500).json({ success: false, error: err });
   })*/
     try{ 
-        const user = await Users.findOne({_id:req.params.id}).select("-role -__v")
+        const user = await Users.findOne({_id:req.params.id}).select("-role -__v -passwordHash")
         if (user) {
             res.json({ success: true, data: user });
         } else {
@@ -177,6 +177,7 @@ const history = async(req,res)=>{
     }
   });
 }
+
 
 const logout = (req,res)=>{
   

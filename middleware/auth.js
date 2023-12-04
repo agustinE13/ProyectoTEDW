@@ -11,7 +11,7 @@ const checkAuth = async (req, res, next) => {
         const token = req.cookies.jwt 
         const tokenData = await verifyToken(token)
         
-        if (tokenData._id) {
+        if (tokenData) {
             next()
         } else {
             res.status(409)

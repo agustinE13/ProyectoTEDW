@@ -26,5 +26,9 @@ router.delete('/deleteProduct/:id',checkAuth,checkRoleAuth(['admin']),Controlado
 //actualizar un producto
 router.patch('/updateProduct/:id',checkAuth,checkRoleAuth(['admin']),ControladorProducto.UpdateProduct)
 
+//---------------------CATEGORIA
+router.delete('/deleteCategory/:id',ControladorProducto.Deletecategory)
+router.post('/newCategory',ControladorProducto.newcategory)
+router.patch('/updateCategory/:id',ControladorProducto.updateCategory)
 
 module.exports = router

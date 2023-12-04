@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 
 const CategorySchema = new mongoose.Schema({
-    id_category : Number,
-    category: String
+    categoria: String
 },
 {collection:'Category'});
 const Category = mongoose.model('Category', CategorySchema);
