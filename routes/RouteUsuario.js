@@ -21,6 +21,7 @@ router.post('/newAddress/:id',checkOrigin,checkAuth,ControladorUsuario.newAddres
 router.get('/myAddresses/:id',checkOrigin,checkAuth,ControladorUsuario.AddressUSer)
 router.patch('/updatemyAddres/:idAddress',checkOrigin,checkAuth,ControladorUsuario.updateAddress)
 router.delete('/dletemyAddress/:userId/:direccionId',checkOrigin,checkAuth,ControladorUsuario.deleteAddres)
+router.get('/addressbyId/:userId/:addressId',ControladorUsuario.getAddresbyId)
 
 module.exports = router
 

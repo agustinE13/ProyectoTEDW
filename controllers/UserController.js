@@ -161,12 +161,6 @@ const changePassword = async(req,res)=>{
     
   }
 
-  
-
-
-
-
-
 }
 
 const resetPassword = async(req,res)=> {
@@ -297,6 +291,31 @@ const deleteAddres = async(req,res)=>{
   }
 }
 
+const getAddresbyId = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const addressId = req.params.addressId;
+    const user = await Users.findOne({ _id: userId, 'addresses': addressId })
+      .populate('addresses');
 
-module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword,logout,
-changePassword,newAddress,AddressUSer,updateAddress, deleteAddres}
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado o dirección no asociada al usuario.' });
+    }
+
+    const foundAddress = user.addresses.find(address => address._id.equals(addressId));
+
+    if (!foundAddress) {
+      return res.status(404).json({ message: 'Dirección no encontrada para el usuario especificado.' });
+    }
+
+    return res.json(foundAddress);
+  } catch (error) {
+    console.error('Error al obtener la dirección:', error);
+    return res.status(500).json({ message: 'Error interno del servidor.' });
+  }
+}
+
+module.exports = {newUser,login,profile,editprofile,allUsers,
+  forgotpassword,resetPassword,logout,
+changePassword,newAddress,AddressUSer,
+updateAddress, deleteAddres,getAddresbyId}
