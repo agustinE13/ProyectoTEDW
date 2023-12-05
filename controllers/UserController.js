@@ -261,24 +261,42 @@ const AddressUSer = async(req,res)=>{
 } 
 
 const updateAddress = async(req,res)=>{
-  const userId = req.params.userId;
-  const direccionId = req.params.direccionId;
+
+  const direccionId = req.params.idAddress;
   const nuevaInformacionDireccion = req.body;
 
   try {
-    const direccionActualizada = await Direction.findByIdAndUpdate(
+    const direccionActualizada = await Address.findByIdAndUpdate(
       direccionId,
       { $set: nuevaInformacionDireccion },
       { new: true }
     );
 
-    res.json({ direccionActualizada });
+    res.status(200).json({ success:"true", data:direccionActualizada});
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al actualizar la dirección' });
   }
 }
+const deleteAddres = async(req,res)=>{
+  const userId = req.params.userId;
+  const direccionId = req.params.direccionId;
+
+  try {
+    await Address.findByIdAndRemove(direccionId);
+    const usuario = await Users.findByIdAndUpdate(
+      userId,
+      { $pull: { addresses: direccionId } },
+      { new: true }
+    );
+
+    res.json({ success:true });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar la dirección' });
+  }
+}
 
 
 module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword,logout,
-changePassword,newAddress,AddressUSer}
+changePassword,newAddress,AddressUSer,updateAddress, deleteAddres}

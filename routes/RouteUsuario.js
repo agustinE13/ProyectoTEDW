@@ -17,8 +17,10 @@ router.post('/users/logout',checkOrigin,ControladorUsuario.logout)
 
 
 
-router.post('/newAddress/:id',ControladorUsuario.newAddress)
-router.get('/myAddresses/:id',ControladorUsuario.AddressUSer)
+router.post('/newAddress/:id',checkOrigin,checkAuth,ControladorUsuario.newAddress)
+router.get('/myAddresses/:id',checkOrigin,checkAuth,ControladorUsuario.AddressUSer)
+router.patch('/updatemyAddres/:idAddress',checkOrigin,checkAuth,ControladorUsuario.updateAddress)
+router.delete('/dletemyAddress/:userId/:direccionId',checkOrigin,checkAuth,ControladorUsuario.deleteAddres)
 
 module.exports = router
 

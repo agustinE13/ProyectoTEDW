@@ -5,13 +5,18 @@ const Order = require('../models/Pedido')
 
 const allOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user').populate('cart.items.products').select('-user.passwordHash');
+        const orders = await Order.find()
+            .populate('user')
+            .populate('cart.items.products')
+            .select('-passwordHash');
+
         res.json(orders);
     } catch (error) {
         console.log(error);
         res.status(500).send("Internal Server Error");
     }
 };
+
 
 const newOrder = async (req, res) => {
     try {
