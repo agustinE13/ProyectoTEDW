@@ -7,7 +7,7 @@ const allOrders = async (req, res) => {
     try {
         const orders = await Order.find()
             .populate('user')
-            .populate('cart.items.products')
+            .populate('cart.items.products').populate('user.address')
             .select('-passwordHash');
 
         res.json(orders);
@@ -17,11 +17,25 @@ const allOrders = async (req, res) => {
     }
 };
 
+const orderbyID=async (req,res)=>{
+    const userId = req.params.id;
+
+    try {
+        const userOrders = await Order.find({ 'user': userId })
+          .select('user._id cart.totalQty cart.totalCost paymentId Delivered address createdAt items.products');
+    
+        res.json(userOrders);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al obtener las órdenes del usuario' });
+      }
+}
 
 const newOrder = async (req, res) => {
     try {
         let order = req.body;
         order.user = new mongoose.Types.ObjectId(req.body.user);
+        order.address = new mongoose.Types.ObjectId(req.body.address);
 
         order.items = [];
         order.items = req.body.cart.items.map(item => ({
@@ -41,4 +55,4 @@ const newOrder = async (req, res) => {
 };
 
 
-module.exports={allOrders,newOrder}
+module.exports={allOrders,newOrder,orderbyID}
