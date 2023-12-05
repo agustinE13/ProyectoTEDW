@@ -6,14 +6,14 @@ const checkAuth = require('../middleware/auth')
 const checkRoleAuth = require('../middleware/roleauth')
 
 //-----Gets
-router.get('/suppliers',supplierController.getsuppliers)
-router.get('/supplier/:id', supplierController.supplierId)
-router.get('/searchsupplier/:item',supplierController.search)
+router.get('/suppliers',checkAuth,checkRoleAuth(['admin']),supplierController.getsuppliers)
+router.get('/supplier/:id',checkAuth,checkRoleAuth(['admin']), supplierController.supplierId)
+router.get('/searchsupplier/:item',checkAuth,checkRoleAuth(['admin']),supplierController.search)
 //--Posts
-router.post('/Newsupplier',supplierController.newsupplier)
+router.post('/Newsupplier',checkAuth,checkRoleAuth(['admin']),supplierController.newsupplier)
 //---put
-router.put('/updatesupplier/:id',supplierController.updatesupplier)
+router.put('/updatesupplier/:id',checkAuth,checkRoleAuth(['admin']),supplierController.updatesupplier)
 //---delete
-router.delete('/deletesupplier/:id',supplierController.deletesupplier)
+router.delete('/deletesupplier/:id',checkAuth,checkRoleAuth(['admin']),supplierController.deletesupplier)
 
 module.exports = router

@@ -10,8 +10,8 @@ app.use(cookieParser())
 const checkOrigin = async (req, res, next) => {
     try {
         // Obtener el token desde la cookie
-        const token = req.cookies.jwt;
-
+        const token = req.headers.authorization.split(' ')[1]; 
+        
         // Verificar si hay un token en la cookie
         if (!token) {
             res.status(401).json({ error: 'login to coninue' });

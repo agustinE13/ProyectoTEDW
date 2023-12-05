@@ -8,8 +8,8 @@ app.use(cookieParser())
 const checkAuth = async (req, res, next) => {
     try {
          //obtener el token desde la cookie 
-        const token = req.cookies.jwt 
-        const tokenData = await verifyToken(token)
+         const token = req.headers.authorization.split(' ')[1]; 
+         const tokenData = await verifyToken(token)
         
         if (tokenData) {
             next()

@@ -8,7 +8,7 @@ app.use(cookieParser())
 const checkRoleAuth = (roles) => async (req, res, next) => {
     try {
         //obtener el token desde la cookie
-        const token = req.cookies.jwt
+        const token = req.headers.authorization.split(' ')[1]; 
         //validar el token
         const tokenData = await verifyToken(token)
         const userData = await userModel.Users.findById(tokenData._id)

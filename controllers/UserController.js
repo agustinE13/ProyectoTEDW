@@ -39,7 +39,7 @@ const login = async (req, res) => {
     if (user && bcrypt.compareSync(req.body.password, user.passwordHash)) {
       const token = await tokenSign(user);
       res.cookie("jwt", token,  { sameSite: 'None', secure: true });
-      res.status(200).json({ success: true, message: "success login" });
+      res.status(200).json({ success: true, message: "success login", token:token });
     } else {
       res.status(400).json({ success: false, message: 'Wrong Password' });
     }
