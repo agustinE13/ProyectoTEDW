@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken');
 const { tokenSign } = require('../libs/token')
 const sendemail = require('../middleware/sendEmail')
+const Address = require('../models/Address')
 
 const newUser = async(req,res)=>{
     const user = await Users.findOne({email: req.body.email})
@@ -128,6 +129,46 @@ const forgotpassword = async(req, res) =>{
         console.error(error);
     }
 }
+
+const changePassword = async(req,res)=>{
+  
+  const lastPassword = req.body.lastPassword
+  const newPassword = req.body.newPassword
+  const verifyPassword = req.body.verifyPassword
+
+  try {
+    const exist = await Users.findOne({ _id: req.params.id })
+
+  if(exist){
+    if(exist.passwordHash == bcrypt.hashSync(req.body.lastpassword, 10)){
+      if(newPassword==verifyPassword){
+        Users.findOneAndUpdate({ _id },{ $set: {passwordHash: bcrypt.hashSync(req.body.newPassword, 10) }},{ new: true })
+        .then(user => {
+          if (user) {
+            return res.status(200).json({ success: true, message: 'Updated password!' })
+          } else {
+            return res.status(404).json({ success: false, message: 'password was not updated correctly' })
+          }
+        })
+      }else{
+        res.status(400).json({ error: "Passwords do not match" });
+      }
+    }else{
+      res.status(400).json({ error: "Your last password do not match" });
+    }
+  }
+  } catch (error) {
+    
+  }
+
+  
+
+
+
+
+
+}
+
 const resetPassword = async(req,res)=> {
     const { token } = req.params
     const  password  = req.body.password
@@ -188,4 +229,56 @@ const logout = (req,res)=>{
   res.status(200).json({ success:true });
 }
 
-module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword,logout}
+//-------------------DIRECCIONES--------------
+const newAddress = async(req,res)=>{
+  const userId = req.params.id;
+  const nuevaDireccion = req.body;
+
+  try {
+    const direccionCreada = await Address.create(nuevaDireccion);
+    const usuario = await Users.findByIdAndUpdate(
+      userId,
+      { $push: { addresses: direccionCreada._id } },
+      { new: true }
+    );
+
+    res.json({ usuario, nuevaDireccion: direccionCreada });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear la dirección' });
+  }
+}
+
+const AddressUSer = async(req,res)=>{
+  const userId = req.params.id;
+  try {
+    const usuario = await Users.findById(userId).populate('addresses').select('-__v -passwordHash -lastname -role -phone -email');
+    res.json(usuario);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener las direcciones' });
+  }
+} 
+
+const updateAddress = async(req,res)=>{
+  const userId = req.params.userId;
+  const direccionId = req.params.direccionId;
+  const nuevaInformacionDireccion = req.body;
+
+  try {
+    const direccionActualizada = await Direction.findByIdAndUpdate(
+      direccionId,
+      { $set: nuevaInformacionDireccion },
+      { new: true }
+    );
+
+    res.json({ direccionActualizada });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar la dirección' });
+  }
+}
+
+
+module.exports = {newUser,login,profile,editprofile,allUsers,forgotpassword,resetPassword,logout,
+changePassword,newAddress,AddressUSer}

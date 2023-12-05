@@ -6,6 +6,7 @@ const producto = require('./routes/RouteProducto')
 const usuario = require('./routes/RouteUsuario');
 const supplier = require('./routes/RouteSupplier')
 const brand = require('./routes/RouteBrand')
+const order = require('./routes/RouteOrder')
 const passport = require('passport');
 const apiprefix = process.env.API_PREFIX
 const port = process.env.PORT
@@ -28,6 +29,7 @@ app.use(apiprefix,producto)
 app.use(apiprefix, usuario)
 app.use(apiprefix,supplier)
 app.use(apiprefix,brand)
+app.use(apiprefix,order)
 
 
 

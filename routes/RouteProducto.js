@@ -31,4 +31,5 @@ router.delete('/deleteCategory/:id',ControladorProducto.Deletecategory)
 router.post('/newCategory',ControladorProducto.newcategory)
 router.patch('/updateCategory/:id',ControladorProducto.updateCategory)
 
+
 module.exports = router

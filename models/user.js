@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const address = require('./Address')
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -21,23 +22,11 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    street: {
-        type: String,
-        default: ''
-    },
-    
-    zip :{
-        type: String,
-        default: ''
-    },
-    city: {
-        type: String,
-        default: ''
-    },
-    state: {
-        type: String,
-        default: ''
-    },
+    addresses:[{
+        type: mongoose.Schema.ObjectId,
+        ref: 'Address',
+        require:true
+    }],
     role: {
         type: String,
         default: "customer",
